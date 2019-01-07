@@ -1,5 +1,5 @@
 const Urrl = require("urrl")
-const TwitchExt = require("./TwitchExt.js")
+const TwitchExt = require("twitchext")
 
 const TWITCH_USER_URL = new Urrl("https://api.twitch.tv/kraken/users/{userId}")
 const TWITCH_CHANNEL_URL = new Urrl("https://api.twitch.tv/kraken/channels/{channelId}")

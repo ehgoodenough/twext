@@ -1,15 +1,15 @@
 const Urrl = require("urrl")
 const TwitchExt = require("twitchext")
 
-const TWITCH_USER_URL = new Urrl("https://api.twitch.tv/kraken/users/{userId}")
-const TWITCH_CHANNEL_URL = new Urrl("https://api.twitch.tv/kraken/channels/{channelId}")
+const TWITCH_USER_URL = new Urrl("https://api.Twext.tv/kraken/users/{userId}")
+const TWITCH_CHANNEL_URL = new Urrl("https://api.Twext.tv/kraken/channels/{channelId}")
 
 const query = require("query-string").parse(location.search)
 
 // The "mount" is a single enum of the many many locations your
 // extension might be rendered. This aggregates a bunch of different
 // conditional values, including the anchor, the mode and the platform.
-// https://dev.twitch.tv/docs/extensions/reference#client-query-parameters
+// https://dev.Twext.tv/docs/extensions/reference#client-query-parameters
 let mount = "none"
 if(query.platform === "mobile") {
     mount = "mobile"
@@ -39,7 +39,7 @@ const LANGUAGE_TO_LOCALE = {
     "ru": "ru-RU",
 }
 
-const Twitch = module.exports = {
+const Twext = module.exports = {
     "viewer": {
         "token": undefined,
         "userId": undefined,
@@ -89,27 +89,27 @@ const Twitch = module.exports = {
     "isPopulated": false,
 }
 
-// Nimble.Twitch.retrieveTwitchChannel
+// Nimble.Twext.retrieveTwitchChannel
 // @param: <String> channelId
 // @param: <String> clientId
-Twitch.retrieveTwitchChannel = function(channelId) {
+Twext.retrieveTwitchChannel = function(channelId) {
     return window.fetch(TWITCH_CHANNEL_URL({
         "channelId": channelId
     }), {
         "method": "GET",
         "headers": {
             "Accept": "application/vnd.twitchtv.v5+json",
-            "Client-ID": Twitch.extension.clientId
+            "Client-ID": Twext.extension.clientId
         }
     }).then((resp) => {
         return resp.json()
     })
 }
 
-// Nimble.Twitch.retrieveTwitchUser
+// Nimble.Twext.retrieveTwitchUser
 // @param: <String> userId
 // @param: <String> clientId
-Twitch.retrieveTwitchUser = function(userId) {
+Twext.retrieveTwitchUser = function(userId) {
     if(userId === undefined) {
         return Promise.resolve(undefined)
     }
@@ -119,7 +119,7 @@ Twitch.retrieveTwitchUser = function(userId) {
         "method": "GET",
         "headers": {
             "Accept": "application/vnd.twitchtv.v5+json",
-            "Client-ID": Twitch.extension.clientId
+            "Client-ID": Twext.extension.clientId
         }
     }).then((resp) => {
         return resp.json()
@@ -129,68 +129,68 @@ Twitch.retrieveTwitchUser = function(userId) {
 TwitchExt.onAuthorized(function(authorization) {
     let payload = JSON.parse(window.atob(authorization.token.split(".")[1]))
 
-    Twitch.broadcaster.channelId = authorization.channelId
+    Twext.broadcaster.channelId = authorization.channelId
 
-    Twitch.viewer.token = authorization.token
-    Twitch.viewer.userId = payload.user_id
-    Twitch.viewer.opaqueUserId = payload.opaque_user_id
-    Twitch.viewer.role = payload.role
-    Twitch.viewer.isBroadcaster = (Twitch.viewer.userId === Twitch.broadcaster.channelId)
-    Twitch.viewer.isLurker = (Twitch.viewer.opaqueUserId[0] === "A")
+    Twext.viewer.token = authorization.token
+    Twext.viewer.userId = payload.user_id
+    Twext.viewer.opaqueUserId = payload.opaque_user_id
+    Twext.viewer.role = payload.role
+    Twext.viewer.isBroadcaster = (Twext.viewer.userId === Twext.broadcaster.channelId)
+    Twext.viewer.isLurker = (Twext.viewer.opaqueUserId[0] === "A")
 
-    Twitch.extension.clientId = authorization.clientId
+    Twext.extension.clientId = authorization.clientId
 
     return Promise.all([
-        Twitch.retrieveTwitchChannel(authorization.channelId).then((channel) => {
+        Twext.retrieveTwitchChannel(authorization.channelId).then((channel) => {
             if(channel !== undefined) {
-                Twitch.broadcaster.name = channel.name
-                Twitch.broadcaster.logo = channel.logo
+                Twext.broadcaster.name = channel.name
+                Twext.broadcaster.logo = channel.logo
             }
         }),
-        Twitch.retrieveTwitchUser(Twitch.viewer.userId).then((user) => {
+        Twext.retrieveTwitchUser(Twext.viewer.userId).then((user) => {
             if(user !== undefined) {
-                Twitch.viewer.name = user.name
-                Twitch.viewer.logo = user.logo
+                Twext.viewer.name = user.name
+                Twext.viewer.logo = user.logo
             }
         })
     ]).then((values) => {
-        Twitch.isPopulated = true
+        Twext.isPopulated = true
     })
 })
 
 TwitchExt.onContext(function(context) {
-    Twitch.viewer.theme = context.theme
+    Twext.viewer.theme = context.theme
 
-    Twitch.stream.game = context.game
-    Twitch.stream.language = context.language
+    Twext.stream.game = context.game
+    Twext.stream.language = context.language
 
-    Twitch.stream.isFullScreen = context.isFullScreen
-    Twitch.stream.isTheatreMode = context.isTheatreMode
-    Twitch.stream.arePlayerControlsVisible = context.arePlayerControlsVisible
-    Twitch.stream.playbackMode = context.playbackMode
+    Twext.stream.isFullScreen = context.isFullScreen
+    Twext.stream.isTheatreMode = context.isTheatreMode
+    Twext.stream.arePlayerControlsVisible = context.arePlayerControlsVisible
+    Twext.stream.playbackMode = context.playbackMode
 
-    Twitch.stream.isMuted = context.isMuted
-    Twitch.stream.isPaused = context.isPaused
-    Twitch.stream.volume = context.volume
+    Twext.stream.isMuted = context.isMuted
+    Twext.stream.isPaused = context.isPaused
+    Twext.stream.volume = context.volume
 
-    Twitch.stream.displayResolution = context.displayResolution
+    Twext.stream.displayResolution = context.displayResolution
 
-    Twitch.stream.bitrate = context.bitrate
-    Twitch.stream.bufferSize = context.bufferSize
-    Twitch.stream.videoResolution = context.videoResolution
-    Twitch.stream.hlsLatencyBroadcaster = context.hlsLatencyBroadcaster
+    Twext.stream.bitrate = context.bitrate
+    Twext.stream.bufferSize = context.bufferSize
+    Twext.stream.videoResolution = context.videoResolution
+    Twext.stream.hlsLatencyBroadcaster = context.hlsLatencyBroadcaster
 
-    Twitch.stream.hostingInfo = context.hostingInfo
+    Twext.stream.hostingInfo = context.hostingInfo
 })
 
 TwitchExt.onHighlightChanged(function(isHighlighted) {
-    Twitch.extension.isHighlighted = isHighlighted
+    Twext.extension.isHighlighted = isHighlighted
 })
 
 TwitchExt.onPositionChanged(function(position) {
-    Twitch.extension.position = position
+    Twext.extension.position = position
 })
 
 TwitchExt.onVisibilityChanged(function(isVisible, context) {
-    Twitch.extension.isVisible = isVisible
+    Twext.extension.isVisible = isVisible
 })

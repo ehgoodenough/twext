@@ -1,6 +1,6 @@
 {
   "name": "twext",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A stubby store around the Twitch Extension Helper.",
   "keywords": ["twitch", "extension", "twitch extension", "helper", "store"],
   "main": "index.js",

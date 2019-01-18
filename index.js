@@ -3,6 +3,8 @@ const TwitchExt = require("twitchext")
 
 const TWITCH_USER_URL = new Urrl("https://api.Twext.tv/kraken/users/{userId}")
 const TWITCH_CHANNEL_URL = new Urrl("https://api.Twext.tv/kraken/channels/{channelId}")
+const TWITCH_BADGES_URL = new Urrl("https://api.twitch.tv/kraken/users/{userId}/chat/channels/{channelId}?api_version=5")
+const TWITCH_FOLLOWS_URL = new Urrl("https://api.twitch.tv/helix/users/follows?from_id={userId}&to_id={channelId}")
 
 const query = require("query-string").parse(location.search)
 
@@ -46,6 +48,8 @@ const Twext = module.exports = {
         "opaqueUserId": undefined,
         "role": undefined,
         "isBroadcaster": undefined,
+        "isSubscriber": undefined,
+        "isFollower": undefined,
         "isLurker": undefined,
         "name": undefined,
         "logo": undefined,
@@ -126,6 +130,33 @@ Twext.retrieveTwitchUser = function(userId) {
     })
 }
 
+Twext.retrieveTwitchUserBadges = function(userId, channelId) {
+    return window.fetch(TWITCH_BADGES_URL({"userId": userId, "channelId": channelId}), {
+        "method": "GET",
+        "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.twitchtv.v5+json",
+            "Client-ID": Twext.extension.clientId,
+        }
+    }).then((response) => {
+        return response.json()
+    })
+}
+
+Twext.retrieveTwitchUserFollows = function(userId, channelId) {
+    return window.fetch(TWITCH_FOLLOWS_URL({"userId": userId, "channelId": channelId}), {
+        "method": "GET",
+        "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.twitchtv.v5+json",
+            "Client-ID": Twext.extension.clientId,
+        }
+    }).then((response) => {
+        return response.json()
+    })
+}
+
+
 TwitchExt.onAuthorized(function(authorization) {
     let payload = JSON.parse(window.atob(authorization.token.split(".")[1]))
 
@@ -135,7 +166,7 @@ TwitchExt.onAuthorized(function(authorization) {
     Twext.viewer.userId = payload.user_id
     Twext.viewer.opaqueUserId = payload.opaque_user_id
     Twext.viewer.role = payload.role
-    Twext.viewer.isBroadcaster = (Twext.viewer.userId === Twext.broadcaster.channelId)
+    Twext.viewer.isBroadcaster = (Twext.viewer.userId === Twext.broadcaster.channelId) // TODO: Consider using Twext.viewer.role
     Twext.viewer.isLurker = (Twext.viewer.opaqueUserId[0] === "A")
 
     Twext.extension.clientId = authorization.clientId
@@ -152,6 +183,18 @@ TwitchExt.onAuthorized(function(authorization) {
                 Twext.viewer.name = user.name
                 Twext.viewer.logo = user.logo
             }
+        }),
+        Twext.retrieveTwitchUserBadges(Twext.viewer.userId, Twext.broadcaster.channelId).then((response) => {
+            Twext.viewer.color = response.color
+            Twext.viewer.badges = response.badges
+            response.badges.forEach((badge) => {
+                if(badge.id === "subscriber") {
+                    Twext.viewer.isSubscriber = true
+                }
+            })
+        }),
+        Twext.retrieveTwitchUserFollows(Twext.viewer.userId, Twext.broadcaster.channelId).then((response) => {
+            Twext.viewer.isFollower = (response.total > 0)
         })
     ]).then((values) => {
         Twext.isPopulated = true

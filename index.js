@@ -1,8 +1,8 @@
 const Urrl = require("urrl")
 const TwitchExt = require("twitchext")
 
-const TWITCH_USER_URL = new Urrl("https://api.Twext.tv/kraken/users/{userId}")
-const TWITCH_CHANNEL_URL = new Urrl("https://api.Twext.tv/kraken/channels/{channelId}")
+const TWITCH_USER_URL = new Urrl("https://api.twitch.tv/kraken/users/{userId}")
+const TWITCH_CHANNEL_URL = new Urrl("https://api.twitch.tv/kraken/channels/{channelId}")
 const TWITCH_BADGES_URL = new Urrl("https://api.twitch.tv/kraken/users/{userId}/chat/channels/{channelId}?api_version=5")
 const TWITCH_FOLLOWS_URL = new Urrl("https://api.twitch.tv/helix/users/follows?from_id={userId}&to_id={channelId}")
 

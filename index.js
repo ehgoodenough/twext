@@ -41,57 +41,57 @@ const LANGUAGE_TO_LOCALE = {
     "ru": "ru-RU",
 }
 
-const Twext = module.exports = {
-    "viewer": {
-        "token": undefined,
-        "userId": undefined,
-        "opaqueUserId": undefined,
-        "role": undefined,
-        "isBroadcaster": undefined,
-        "isSubscriber": undefined,
-        "isFollower": undefined,
-        "isLurker": undefined,
-        "name": undefined,
-        "logo": undefined,
-        "theme": undefined,
-    },
-    "broadcaster": {
-        "channelId": undefined,
-        "name": undefined,
-        "logo": undefined,
-    },
-    "extension": {
-        "mount": mount,
-        "mode": query.mode || "none",
-        "state": query.state || "none",
-        "anchor": query.anchor || "none",
-        "platform": query.platform || "none",
-        "popout": query.popout || "false",
-        "language": query.language || "en",
-        "locale": LANGUAGE_TO_LOCALE[query.language] || "en-US",
-        "clientId": undefined,
-        "isHighlighted": undefined,
-        "position": undefined,
-    },
-    "stream": {
-        "game": undefined,
-        "language": undefined,
-        "isFullScreen": undefined,
-        "isTheatreMode": undefined,
-        "arePlayerControlsVisible": undefined,
-        "playbackMode": undefined,
-        "isMuted": undefined,
-        "isPaused": undefined,
-        "volume": undefined,
-        "bitrate": undefined,
-        "displayResolution": undefined,
-        "bufferSize": undefined,
-        "videoResolution": undefined,
-        "hlsLatencyBroadcaster": undefined,
-        "hostingInfo": undefined,
-    },
-    "isPopulated": false,
+const Twext = module.exports = TwitchExt
+
+Twext.viewer = {
+    "token": undefined,
+    "userId": undefined,
+    "opaqueUserId": undefined,
+    "role": undefined,
+    "isBroadcaster": undefined,
+    "isSubscriber": undefined,
+    "isFollower": undefined,
+    "isLurker": undefined,
+    "name": undefined,
+    "logo": undefined,
+    "theme": undefined,
 }
+Twext.broadcaster = {
+    "channelId": undefined,
+    "name": undefined,
+    "logo": undefined,
+}
+Twext.extension = {
+    "mount": mount,
+    "mode": query.mode || "none",
+    "state": query.state || "none",
+    "anchor": query.anchor || "none",
+    "platform": query.platform || "none",
+    "popout": query.popout || "false",
+    "language": query.language || "en",
+    "locale": LANGUAGE_TO_LOCALE[query.language] || "en-US",
+    "clientId": undefined,
+    "isHighlighted": undefined,
+    "position": undefined,
+}
+Twext.stream = {
+    "game": undefined,
+    "language": undefined,
+    "isFullScreen": undefined,
+    "isTheatreMode": undefined,
+    "arePlayerControlsVisible": undefined,
+    "playbackMode": undefined,
+    "isMuted": undefined,
+    "isPaused": undefined,
+    "volume": undefined,
+    "bitrate": undefined,
+    "displayResolution": undefined,
+    "bufferSize": undefined,
+    "videoResolution": undefined,
+    "hlsLatencyBroadcaster": undefined,
+    "hostingInfo": undefined,
+}
+Twext.isPopulated =  false
 
 // Nimble.Twext.retrieveTwitchChannel
 // @param: <String> channelId
@@ -157,7 +157,7 @@ Twext.retrieveTwitchUserFollows = function(userId, channelId) {
 }
 
 
-TwitchExt.onAuthorized(function(authorization) {
+Twext.onAuthorized(function(authorization) {
     let payload = JSON.parse(window.atob(authorization.token.split(".")[1]))
 
     Twext.broadcaster.channelId = authorization.channelId
@@ -201,7 +201,7 @@ TwitchExt.onAuthorized(function(authorization) {
     })
 })
 
-TwitchExt.onContext(function(context) {
+Twext.onContext(function(context) {
     Twext.viewer.theme = context.theme
 
     Twext.stream.game = context.game
@@ -226,7 +226,7 @@ TwitchExt.onContext(function(context) {
     Twext.stream.hostingInfo = context.hostingInfo
 })
 
-TwitchExt.onHighlightChanged(function(isHighlighted) {
+Twext.onHighlightChanged(function(isHighlighted) {
     Twext.extension.isHighlighted = isHighlighted
 })
 

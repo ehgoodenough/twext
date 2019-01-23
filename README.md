@@ -1,3 +1,3 @@
 # Twext #
 
-A stubby store around the Twitch Extension Helper.
+A more concise Twitch Extension Helper.

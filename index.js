@@ -186,8 +186,8 @@ Twext.onAuthorized(function(authorization) {
         }),
         Twext.retrieveTwitchUserBadges(Twext.viewer.userId, Twext.broadcaster.channelId).then((response) => {
             Twext.viewer.color = response.color
-            Twext.viewer.badges = response.badges
-            response.badges.forEach((badge) => {
+            Twext.viewer.badges = response.badges || []
+            Twext.viewer.badges.forEach((badge) => {
                 if(badge.id === "subscriber") {
                     Twext.viewer.isSubscriber = true
                 }

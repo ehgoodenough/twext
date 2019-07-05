@@ -1,5 +1,6 @@
 const Urrl = require("urrl")
 const TwitchExt = require("twitchext")
+const FetchQuest = require("fetchquest")
 
 const TWITCH_USER_URL = new Urrl("https://api.twitch.tv/kraken/users/{userId}")
 const TWITCH_CHANNEL_URL = new Urrl("https://api.twitch.tv/kraken/channels/{channelId}")
@@ -93,66 +94,62 @@ Twext.stream = {
 }
 Twext.isPopulated =  false
 
-// Nimble.Twext.retrieveTwitchChannel
+// Twext.retrieveTwitchChannel
 // @param: <String> channelId
-// @param: <String> clientId
 Twext.retrieveTwitchChannel = function(channelId) {
-    return window.fetch(TWITCH_CHANNEL_URL({
-        "channelId": channelId
-    }), {
+    return new FetchQuest({
+        "url": TWITCH_CHANNEL_URL({"channelId": channelId})
         "method": "GET",
         "headers": {
             "Accept": "application/vnd.twitchtv.v5+json",
             "Client-ID": Twext.extension.clientId
         }
-    }).then((resp) => {
-        return resp.json()
     })
 }
 
-// Nimble.Twext.retrieveTwitchUser
+// Twext.retrieveTwitchUser
 // @param: <String> userId
-// @param: <String> clientId
 Twext.retrieveTwitchUser = function(userId) {
     if(userId === undefined) {
         return Promise.resolve(undefined)
     }
-    return window.fetch(TWITCH_USER_URL({
-        "userId": userId
-    }), {
+    return new FetchQuest({
+        "url": TWITCH_USER_URL({"userId": userId}),
         "method": "GET",
         "headers": {
             "Accept": "application/vnd.twitchtv.v5+json",
             "Client-ID": Twext.extension.clientId
         }
-    }).then((resp) => {
-        return resp.json()
     })
 }
 
+// Twext.retrieveTwitchUserBadges
+// @param: <String> userId
+// @param: <String> channelId
 Twext.retrieveTwitchUserBadges = function(userId, channelId) {
-    return window.fetch(TWITCH_BADGES_URL({"userId": userId, "channelId": channelId}), {
+    return new FetchQuest({
+        "url": TWITCH_BADGES_URL({"userId": userId, "channelId": channelId}),
         "method": "GET",
         "headers": {
             "Content-Type": "application/json",
             "Accept": "application/vnd.twitchtv.v5+json",
             "Client-ID": Twext.extension.clientId,
         }
-    }).then((response) => {
-        return response.json()
     })
 }
 
+// Twext.retrieveTwitchUserFollows
+// @param: <String> userId
+// @param: <String> channelId
 Twext.retrieveTwitchUserFollows = function(userId, channelId) {
-    return window.fetch(TWITCH_FOLLOWS_URL({"userId": userId, "channelId": channelId}), {
+    return new FetchQuest({
+        "url": TWITCH_FOLLOWS_URL({"userId": userId, "channelId": channelId}),
         "method": "GET",
         "headers": {
             "Content-Type": "application/json",
             "Accept": "application/vnd.twitchtv.v5+json",
             "Client-ID": Twext.extension.clientId,
         }
-    }).then((response) => {
-        return response.json()
     })
 }
 

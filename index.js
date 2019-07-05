@@ -56,11 +56,19 @@ Twext.viewer = {
     "name": undefined,
     "logo": undefined,
     "theme": undefined,
+    "configuration": undefined,
+    "configure": configure("viewer")
 }
 Twext.broadcaster = {
     "channelId": undefined,
     "name": undefined,
     "logo": undefined,
+    "configuration": undefined,
+    "configure": configure("broadcaster")
+}
+Twext.developer = {
+    "configuration": undefined,
+    "configure": configure("developer")
 }
 Twext.extension = {
     "mount": mount,
@@ -76,8 +84,12 @@ Twext.extension = {
     "position": undefined,
 }
 Twext.stream = {
+    // Broadcaster-controlled:
     "game": undefined,
     "language": undefined,
+    "hostingInfo": undefined,
+    "displayResolution": undefined,
+    // Viewer-controlled:
     "isFullScreen": undefined,
     "isTheatreMode": undefined,
     "arePlayerControlsVisible": undefined,
@@ -86,13 +98,17 @@ Twext.stream = {
     "isPaused": undefined,
     "volume": undefined,
     "bitrate": undefined,
-    "displayResolution": undefined,
-    "bufferSize": undefined,
     "videoResolution": undefined,
+    "bufferSize": undefined,
     "hlsLatencyBroadcaster": undefined,
-    "hostingInfo": undefined,
 }
 Twext.isPopulated =  false
+
+function configure(segment) {
+    return function(content) {
+        Twext.configuration.set(segment, "0.0.1", JSON.stringify(content))
+    }
+}
 
 // Twext.retrieveTwitchChannel
 // @param: <String> channelId
@@ -152,7 +168,6 @@ Twext.retrieveTwitchUserFollows = function(userId, channelId) {
         }
     })
 }
-
 
 Twext.onAuthorized(function(authorization) {
     let payload = JSON.parse(window.atob(authorization.token.split(".")[1]))
@@ -227,10 +242,22 @@ Twext.onHighlightChanged(function(isHighlighted) {
     Twext.extension.isHighlighted = isHighlighted
 })
 
-TwitchExt.onPositionChanged(function(position) {
+Twext.onPositionChanged(function(position) {
     Twext.extension.position = position
 })
 
-TwitchExt.onVisibilityChanged(function(isVisible, context) {
+Twext.onVisibilityChanged(function(isVisible, context) {
     Twext.extension.isVisible = isVisible
+})
+
+Twext.configuration.onChanged(function() {
+    ["broadcaster", "viewer", "developer"].forEach((segment) => {
+        if(Twext.configuration[segment] !== undefined) {
+            try {
+                Twext[segment].configuration = JSON.parse(Twext.configuration[segment].content)
+            } catch(error) {
+                console.log(error)
+            }
+        }
+    })
 })

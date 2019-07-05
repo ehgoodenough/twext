@@ -114,7 +114,7 @@ function configure(segment) {
 // @param: <String> channelId
 Twext.retrieveTwitchChannel = function(channelId) {
     return new FetchQuest({
-        "url": TWITCH_CHANNEL_URL({"channelId": channelId})
+        "url": TWITCH_CHANNEL_URL({"channelId": channelId}),
         "method": "GET",
         "headers": {
             "Accept": "application/vnd.twitchtv.v5+json",

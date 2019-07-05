@@ -82,6 +82,7 @@ Twext.extension = {
     "clientId": undefined,
     "isHighlighted": undefined,
     "position": undefined,
+    "version": undefined,
 }
 Twext.stream = {
     // Broadcaster-controlled:
@@ -105,8 +106,8 @@ Twext.stream = {
 Twext.isPopulated =  false
 
 function configure(segment) {
-    return function(content) {
-        Twext.configuration.set(segment, "0.0.1", JSON.stringify(content))
+    return function(content, version) {
+        Twext.configuration.set(segment, version || "0.0.1", JSON.stringify(content))
     }
 }
 

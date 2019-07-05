@@ -88,7 +88,8 @@ Twext.stream = {
     "game": undefined,
     "language": undefined,
     "hostingInfo": undefined,
-    "displayResolution": undefined,
+    "videoResolution": undefined,
+    "bitrate": undefined,
     // Viewer-controlled:
     "isFullScreen": undefined,
     "isTheatreMode": undefined,
@@ -97,8 +98,7 @@ Twext.stream = {
     "isMuted": undefined,
     "isPaused": undefined,
     "volume": undefined,
-    "bitrate": undefined,
-    "videoResolution": undefined,
+    "displayResolution": undefined,
     "bufferSize": undefined,
     "hlsLatencyBroadcaster": undefined,
 }
@@ -256,7 +256,7 @@ Twext.configuration.onChanged(function() {
             try {
                 Twext[segment].configuration = JSON.parse(Twext.configuration[segment].content)
             } catch(error) {
-                console.log(error)
+                Twext[segment].configuration = Twext.configuration[segment]
             }
         }
     })
